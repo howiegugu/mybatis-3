@@ -50,6 +50,7 @@ import org.apache.ibatis.type.JdbcType;
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ * 解析config.xml文件，会直接创建一个configuration对象，用于解析全局配置
  */
 public class XMLConfigBuilder extends BaseBuilder {
 
@@ -103,6 +104,8 @@ public class XMLConfigBuilder extends BaseBuilder {
   }
 
   public Configuration parse() {
+    // 解析入口
+    // sqlsessionfactorybuilder
     if (parsed) {
       throw new BuilderException("Each XMLConfigBuilder can only be used once.");
     }
@@ -114,15 +117,20 @@ public class XMLConfigBuilder extends BaseBuilder {
   private void parseConfiguration(XNode root) {
     try {
       // issue #117 read properties first
+      // 解析properties作为变量
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
+      // 解析类型别名
       typeAliasesElement(root.evalNode("typeAliases"));
+      // 解析插件 添加到链
       pluginElement(root.evalNode("plugins"));
+      // 对象工厂 看DefaultObjectFactory就知道在干啥
       objectFactoryElement(root.evalNode("objectFactory"));
       objectWrapperFactoryElement(root.evalNode("objectWrapperFactory"));
       reflectorFactoryElement(root.evalNode("reflectorFactory"));
+      // 设置前面解析出来的全局属性
       settingsElement(settings);
       // read it after objectFactory and objectWrapperFactory issue #631
       environmentsElement(root.evalNode("environments"));
@@ -141,6 +149,7 @@ public class XMLConfigBuilder extends BaseBuilder {
     Properties props = context.getChildrenAsProperties();
     // Check that all settings are known to the configuration class
     MetaClass metaConfig = MetaClass.forClass(Configuration.class, localReflectorFactory);
+    // 检测该属性是否有对应的set方法
     for (Object key : props.keySet()) {
       if (!metaConfig.hasSetter(String.valueOf(key))) {
         throw new BuilderException(
@@ -180,6 +189,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           String type = child.getStringAttribute("type");
           try {
             Class<?> clazz = Resources.classForName(type);
+            // 如果没有别名 就用类的simpleName
             if (alias == null) {
               typeAliasRegistry.registerAlias(clazz);
             } else {
@@ -294,11 +304,13 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private void environmentsElement(XNode context) throws Exception {
     if (context != null) {
+      // 默认环境
       if (environment == null) {
         environment = context.getStringAttribute("default");
       }
       for (XNode child : context.getChildren()) {
         String id = child.getStringAttribute("id");
+        // 指定的环境
         if (isSpecifiedEnvironment(id)) {
           TransactionFactory txFactory = transactionManagerElement(child.evalNode("transactionManager"));
           DataSourceFactory dsFactory = dataSourceElement(child.evalNode("dataSource"));
@@ -393,6 +405,7 @@ public class XMLConfigBuilder extends BaseBuilder {
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
+              // 解析Mapper文件
               XMLMapperBuilder mapperParser = new XMLMapperBuilder(inputStream, configuration, resource,
                   configuration.getSqlFragments());
               mapperParser.parse();

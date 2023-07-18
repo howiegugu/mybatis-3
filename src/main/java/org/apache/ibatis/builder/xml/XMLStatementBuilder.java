@@ -36,6 +36,7 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * @author Clinton Begin
+ * SQL映射解析 即<select|update|insert|delete> 元素解析成MapperStatement。
  */
 public class XMLStatementBuilder extends BaseBuilder {
 

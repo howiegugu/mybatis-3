@@ -51,6 +51,7 @@ import org.apache.ibatis.type.TypeHandler;
 
 /**
  * @author Clinton Begin
+ * Mapper.xml解析辅助，在一个Mapper.xml中Cache是对Statement（sql声明）共享的，共享组件的分配即由该解析实现。
  */
 public class MapperBuilderAssistant extends BaseBuilder {
 

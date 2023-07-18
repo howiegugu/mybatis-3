@@ -98,11 +98,20 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
  * @author Clinton Begin
+ * Configuration 是整个MyBatis的配置体系集中管理中心，
+ * Executor、StatementHandler、Cache、MappedStatement...
+ * 等绝大部分组件都是由它直接或间接的创建和管理
+ *
+ * 配置来源有3个
+ * Mybatis-config.xml 启动文件，全局配置、全局组件都是来源于此。
+ * Mapper.xml SQL映射(MappedStatement) \结果集映射(ResultMapper)都来源于此。
+ * @Annotation SQL映射与结果集映射的另一种表达形式。
  */
 public class Configuration {
 
+  //环境配置
   protected Environment environment;
-
+  // 存储全局配置信息，其来源于settings
   protected boolean safeRowBoundsEnabled;
   protected boolean safeResultHandlerEnabled = true;
   protected boolean mapUnderscoreToCamelCase;
@@ -150,15 +159,19 @@ public class Configuration {
   protected Class<?> configurationFactory;
 
   protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+  //插件
   protected final InterceptorChain interceptorChain = new InterceptorChain();
+  // 类型处理器
   protected final TypeHandlerRegistry typeHandlerRegistry = new TypeHandlerRegistry(this);
+  //初始化并维护全局基础组件 类型别名
   protected final TypeAliasRegistry typeAliasRegistry = new TypeAliasRegistry();
   protected final LanguageDriverRegistry languageRegistry = new LanguageDriverRegistry();
-
+  // 初始化并维护MappedStatement
   protected final Map<String, MappedStatement> mappedStatements = new StrictMap<MappedStatement>(
       "Mapped Statements collection")
           .conflictMessageProducer((savedValue, targetValue) -> ". please check " + savedValue.getResource() + " and "
               + targetValue.getResource());
+  // 二级缓存空间
   protected final Map<String, Cache> caches = new StrictMap<>("Caches collection");
   protected final Map<String, ResultMap> resultMaps = new StrictMap<>("Result Maps collection");
   protected final Map<String, ParameterMap> parameterMaps = new StrictMap<>("Parameter Maps collection");
@@ -709,6 +722,16 @@ public class Configuration {
     return (ResultSetHandler) interceptorChain.pluginAll(resultSetHandler);
   }
 
+  /**
+   * JDBC处理器
+   * @param executor
+   * @param mappedStatement
+   * @param parameterObject
+   * @param rowBounds
+   * @param resultHandler
+   * @param boundSql
+   * @return
+   */
   public StatementHandler newStatementHandler(Executor executor, MappedStatement mappedStatement,
       Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     StatementHandler statementHandler = new RoutingStatementHandler(executor, mappedStatement, parameterObject,
@@ -720,6 +743,12 @@ public class Configuration {
     return newExecutor(transaction, defaultExecutorType);
   }
 
+  /**
+   * 组件构造器,并基于插件进行增强
+   * @param transaction
+   * @param executorType
+   * @return
+   */
   public Executor newExecutor(Transaction transaction, ExecutorType executorType) {
     executorType = executorType == null ? defaultExecutorType : executorType;
     Executor executor;

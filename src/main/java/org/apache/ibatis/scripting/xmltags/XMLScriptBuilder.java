@@ -31,6 +31,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * @author Clinton Begin
+ * 解析动态SQL数据源当中所设置 SqlNode脚本集。
  */
 public class XMLScriptBuilder extends BaseBuilder {
 
