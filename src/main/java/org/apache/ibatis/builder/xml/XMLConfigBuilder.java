@@ -95,11 +95,14 @@ public class XMLConfigBuilder extends BaseBuilder {
 
   private XMLConfigBuilder(Class<? extends Configuration> configClass, XPathParser parser, String environment,
       Properties props) {
+    // 反射构造configuration
     super(newConfig(configClass));
     ErrorContext.instance().resource("SQL Mapper Configuration");
     this.configuration.setVariables(props);
     this.parsed = false;
+    // 设置变量和解析器
     this.environment = environment;
+    // 用的是Xpath
     this.parser = parser;
   }
 
@@ -120,6 +123,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       // 解析properties作为变量
       propertiesElement(root.evalNode("properties"));
       Properties settings = settingsAsProperties(root.evalNode("settings"));
+      // 加载自定义的组件类
       loadCustomVfs(settings);
       loadCustomLogImpl(settings);
       // 解析类型别名
@@ -370,6 +374,7 @@ public class XMLConfigBuilder extends BaseBuilder {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
           String typeHandlerPackage = child.getStringAttribute("name");
+          // 如果是包名 就扫描包下所有的类去进行注册
           typeHandlerRegistry.register(typeHandlerPackage);
         } else {
           String javaTypeName = child.getStringAttribute("javaType");
@@ -396,12 +401,17 @@ public class XMLConfigBuilder extends BaseBuilder {
     if (parent != null) {
       for (XNode child : parent.getChildren()) {
         if ("package".equals(child.getName())) {
+          // 如果指定了<package>子标签，则会扫描指定包内全部Java类型
           String mapperPackage = child.getStringAttribute("name");
           configuration.addMappers(mapperPackage);
         } else {
+          // 解析<mapper>子标签，这里会获取resource、url、class三个属性，这三个属性互斥
           String resource = child.getStringAttribute("resource");
           String url = child.getStringAttribute("url");
           String mapperClass = child.getStringAttribute("class");
+          // 如果<mapper>子标签指定了resource或是url属性，都会创建XMLMapperBuilder对象，
+
+          // 然后使用这个XMLMapperBuilder实例解析指定的Mapper.xml配置文件
           if (resource != null && url == null && mapperClass == null) {
             ErrorContext.instance().resource(resource);
             try (InputStream inputStream = Resources.getResourceAsStream(resource)) {
@@ -418,6 +428,7 @@ public class XMLConfigBuilder extends BaseBuilder {
               mapperParser.parse();
             }
           } else if (resource == null && url == null && mapperClass != null) {
+            // 如果<mapper>子标签指定了class属性，则向MapperRegistry注册class属性指定的Mapper接口
             Class<?> mapperInterface = Resources.classForName(mapperClass);
             configuration.addMapper(mapperInterface);
           } else {

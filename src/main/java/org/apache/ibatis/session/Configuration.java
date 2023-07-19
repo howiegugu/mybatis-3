@@ -786,6 +786,7 @@ public class Configuration {
   }
 
   public void addCache(Cache cache) {
+    // 添加到容器
     caches.put(cache.getId(), cache);
   }
 
@@ -1095,15 +1096,18 @@ public class Configuration {
     @Override
     @SuppressWarnings("unchecked")
     public V put(String key, V value) {
+      // 如果存在 异常
       if (containsKey(key)) {
         throw new IllegalArgumentException(name + " already contains key " + key
             + (conflictMessageProducer == null ? "" : conflictMessageProducer.apply(super.get(key), value)));
       }
+      // 如果包含. 添加shortkey指向
       if (key.contains(".")) {
         final String shortKey = getShortName(key);
         if (super.get(shortKey) == null) {
           super.put(shortKey, value);
         } else {
+          // 用冲突对象覆盖掉
           super.put(shortKey, (V) new Ambiguity(shortKey));
         }
       }

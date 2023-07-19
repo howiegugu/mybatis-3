@@ -406,6 +406,7 @@ public final class TypeHandlerRegistry {
       typeHandlerMap.put(javaType, map);
     }
     allTypeHandlersMap.put(handler.getClass(), handler);
+    // 两个数据结构 因为一个javatype可能可以处理多种jdbctype
   }
 
   //
