@@ -132,6 +132,7 @@ public class MetaObject {
           // don't instantiate child path if value is null
           return;
         }
+        // 遇到子对象为空 先创建
         metaValue = objectWrapper.instantiatePropertyValue(name, prop, objectFactory);
       }
       metaValue.setValue(prop.getChildren(), value);

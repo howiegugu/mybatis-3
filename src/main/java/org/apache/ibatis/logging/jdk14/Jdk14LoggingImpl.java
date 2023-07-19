@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import org.apache.ibatis.logging.Log;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin 实现自己的log接口 引用着jdk的log实现类
  */
 public class Jdk14LoggingImpl implements Log {
 

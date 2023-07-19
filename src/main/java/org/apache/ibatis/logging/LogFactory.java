@@ -31,6 +31,7 @@ public final class LogFactory {
   private static Constructor<? extends Log> logConstructor;
 
   static {
+    // 尝试加载日志适配器
     tryImplementation(LogFactory::useSlf4jLogging);
     tryImplementation(LogFactory::useCommonsLogging);
     tryImplementation(LogFactory::useLog4J2Logging);
@@ -94,6 +95,7 @@ public final class LogFactory {
   private static void tryImplementation(Runnable runnable) {
     if (logConstructor == null) {
       try {
+        // 不为空说明已经确定用啥日志
         runnable.run();
       } catch (Throwable t) {
         // ignore
@@ -103,6 +105,7 @@ public final class LogFactory {
 
   private static void setImplementation(Class<? extends Log> implClass) {
     try {
+      // 尝试实例化 成功就是它
       Constructor<? extends Log> candidate = implClass.getConstructor(String.class);
       Log log = candidate.newInstance(LogFactory.class.getName());
       if (log.isDebugEnabled()) {

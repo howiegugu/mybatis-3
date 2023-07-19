@@ -51,6 +51,8 @@ import org.apache.ibatis.session.Configuration;
 /**
  * @author Clinton Begin
  * @author Kazuki Shimizu
+ * 统一管理所有 TypeHandler 实例
+ * register 进行注册
  */
 public final class TypeHandlerRegistry {
 
@@ -77,6 +79,8 @@ public final class TypeHandlerRegistry {
    *          a MyBatis configuration
    *
    * @since 3.5.4
+   *
+   * 内置注册类型转换器
    */
   public TypeHandlerRegistry(Configuration configuration) {
     this.unknownTypeHandler = new UnknownTypeHandler(configuration);

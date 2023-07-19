@@ -27,7 +27,8 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin 处理表达式 order.deliveryAddress.customer.name
+ * 依赖 reflector PropertyTokenizer 递归查询
  */
 public class MetaClass {
 

@@ -143,6 +143,7 @@ public class BeanWrapper extends BaseWrapper {
     MetaObject metaValue;
     Class<?> type = getSetterType(prop.getName());
     try {
+      // 通过对象工厂创建
       Object newObject = objectFactory.create(type);
       metaValue = MetaObject.forObject(newObject, metaObject.getObjectFactory(), metaObject.getObjectWrapperFactory(),
           metaObject.getReflectorFactory());

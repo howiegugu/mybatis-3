@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin 直接操作属性值
  */
 public class SetFieldInvoker implements Invoker {
   private final Field field;

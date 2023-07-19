@@ -19,6 +19,7 @@ import java.util.Iterator;
 
 /**
  * @author Clinton Begin
+ * 解析由“.”和“[]”构成的表达式 可以解析嵌套多层表达式
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private String name;

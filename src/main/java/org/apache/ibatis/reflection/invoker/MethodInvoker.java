@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin  通过set get 方法操作属性值
  */
 public class MethodInvoker implements Invoker {
 

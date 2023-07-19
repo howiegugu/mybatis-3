@@ -23,7 +23,7 @@ import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin 对集合的操作
  */
 public abstract class BaseWrapper implements ObjectWrapper {
 

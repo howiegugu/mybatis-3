@@ -20,6 +20,6 @@ public interface ReflectorFactory {
   boolean isClassCacheEnabled();
 
   void setClassCacheEnabled(boolean classCacheEnabled);
-
+  // 带有缓存 加速解析
   Reflector findForClass(Class<?> type);
 }

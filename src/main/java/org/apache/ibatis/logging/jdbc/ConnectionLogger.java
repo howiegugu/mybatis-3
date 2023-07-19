@@ -51,6 +51,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
           debug(" Preparing: " + removeExtraWhitespace((String) params[0]), true);
         }
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
+        // 一层层代理包装下去
         return PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
       }
       if ("createStatement".equals(method.getName())) {
@@ -74,6 +75,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
    *          the query stack
    *
    * @return the connection with logging
+   * 如果为debug executor获取连接时会经过这里一层代理包装
    */
   public static Connection newInstance(Connection conn, Log statementLog, int queryStack) {
     InvocationHandler handler = new ConnectionLogger(conn, statementLog, queryStack);

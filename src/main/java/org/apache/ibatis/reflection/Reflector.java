@@ -62,7 +62,7 @@ public class Reflector {
   private final Map<String, Class<?>> setTypes = new HashMap<>();
   private final Map<String, Class<?>> getTypes = new HashMap<>();
   private Constructor<?> defaultConstructor;
-
+  // 所有属性名称的集合，记录到这个集合中的属性名称都是大写的。
   private final Map<String, String> caseInsensitivePropertyMap = new HashMap<>();
 
   public Reflector(Class<?> clazz) {
@@ -101,6 +101,7 @@ public class Reflector {
     Map<String, List<Method>> conflictingGetters = new HashMap<>();
     Arrays.stream(methods).filter(m -> m.getParameterTypes().length == 0 && PropertyNamer.isGetter(m.getName()))
         .forEach(m -> addMethodConflict(conflictingGetters, PropertyNamer.methodToProperty(m.getName()), m));
+    // 可能有父类继承下来的get set 尽量取子类的
     resolveGetterConflicts(conflictingGetters);
   }
 

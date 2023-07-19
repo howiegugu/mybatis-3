@@ -34,7 +34,7 @@ import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
- * @author Clinton Begin
+ * @author Clinton Begin 自定义反射创建工厂
  */
 public class DefaultObjectFactory implements ObjectFactory, Serializable {
 
