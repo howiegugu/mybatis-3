@@ -35,7 +35,7 @@ import java.util.concurrent.locks.ReadWriteLock;
  *   initialize();
  * }
  * </pre>
- *
+ * PerpetualCache 基础类 其他的都是装饰器类 默认用LRU来装饰
  * @author Clinton Begin
  */
 

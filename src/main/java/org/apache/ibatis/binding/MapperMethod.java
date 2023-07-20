@@ -54,6 +54,12 @@ public class MapperMethod {
     this.method = new MethodSignature(config, mapperInterface, method);
   }
 
+  /**
+   * 根据不同类型 提交给sqlsession执行
+   * @param sqlSession
+   * @param args
+   * @return
+   */
   public Object execute(SqlSession sqlSession, Object[] args) {
     Object result;
     switch (command.getType()) {
@@ -246,7 +252,7 @@ public class MapperMethod {
     public SqlCommandType getType() {
       return type;
     }
-
+    // 递归查找
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName, Class<?> declaringClass,
         Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;
@@ -279,6 +285,7 @@ public class MapperMethod {
     private final String mapKey;
     private final Integer resultHandlerIndex;
     private final Integer rowBoundsIndex;
+    // 解析方法参数列表
     private final ParamNameResolver paramNameResolver;
 
     public MethodSignature(Configuration configuration, Class<?> mapperInterface, Method method) {

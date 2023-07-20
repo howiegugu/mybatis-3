@@ -30,10 +30,12 @@ import org.apache.ibatis.session.SqlSession;
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * 统一维护 Mapper 接口以及这些 Mapper 的代理对象工厂。
  */
 public class MapperRegistry {
 
   private final Configuration config;
+  // 维护解析到的mapper
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new ConcurrentHashMap<>();
 
   public MapperRegistry(Configuration config) {
@@ -47,6 +49,7 @@ public class MapperRegistry {
       throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
     }
     try {
+      // 获取到的是代理
       return mapperProxyFactory.newInstance(sqlSession);
     } catch (Exception e) {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);

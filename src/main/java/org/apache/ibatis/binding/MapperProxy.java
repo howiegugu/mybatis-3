@@ -91,12 +91,15 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
 
   private MapperMethodInvoker cachedInvoker(Method method) throws Throwable {
     try {
+      // 封装调用方法
       return MapUtil.computeIfAbsent(methodCache, method, m -> {
         if (!m.isDefault()) {
+          // mapper方法
           return new PlainMethodInvoker(new MapperMethod(mapperInterface, method, sqlSession.getConfiguration()));
         }
         try {
           if (privateLookupInMethod == null) {
+            //接口默认方法
             return new DefaultMethodInvoker(getMethodHandleJava8(method));
           }
           return new DefaultMethodInvoker(getMethodHandleJava9(method));

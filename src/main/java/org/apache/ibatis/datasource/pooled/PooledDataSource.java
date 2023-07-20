@@ -43,7 +43,7 @@ import org.apache.ibatis.logging.LogFactory;
 public class PooledDataSource implements DataSource {
 
   private static final Log log = LogFactory.getLog(PooledDataSource.class);
-
+  // 才是管理连接的地方
   private final PoolState state = new PoolState(this);
 
   private final UnpooledDataSource dataSource;

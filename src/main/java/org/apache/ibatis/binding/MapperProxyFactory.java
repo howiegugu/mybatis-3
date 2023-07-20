@@ -25,10 +25,12 @@ import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author Lasse Voss
+ * // 其实就是简单的创建代理
  */
 public class MapperProxyFactory<T> {
-
+  // 接口类型
   private final Class<T> mapperInterface;
+  // 方法缓存
   private final Map<Method, MapperMethodInvoker> methodCache = new ConcurrentHashMap<>();
 
   public MapperProxyFactory(Class<T> mapperInterface) {
